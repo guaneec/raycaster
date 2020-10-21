@@ -1,9 +1,16 @@
 #include <math.h>
+#include <cstdint>
 #include <iostream>
 #include <sstream>
 
+using uint16_t = std::uint16_t;
+
+#include "../defs.h"
 #include "precalculator.h"
-#include "raycaster_tables.h"
+// #include "../raycaster_tables.h"
+uint16_t g_tan[256], g_cotan[256], g_sin[256], g_cos[256], g_nearHeight[256],
+    g_farHeight[256], g_nearStep[256], g_farStep[256], g_overflowOffset[256],
+    g_overflowStep[256], g_deltaAngle[SCREEN_WIDTH];
 
 RayCasterPrecalculator::RayCasterPrecalculator() {}
 
@@ -111,4 +118,9 @@ void RayCasterPrecalculator::Precalculate()
 
     std::cout << dump.str() << std::endl;
 #endif  // ! HAS_TABLES
+}
+
+int main()
+{
+    RayCasterPrecalculator().Precalculate();
 }

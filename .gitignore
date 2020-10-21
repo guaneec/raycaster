@@ -1,3 +1,6 @@
 *.o.d
 *.o
 main
+.vscode/
+raycaster_tables.h
+tools/precalculator

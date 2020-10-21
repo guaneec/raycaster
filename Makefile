@@ -1,4 +1,5 @@
 BIN = main
+CALC = tools/precalculator
 
 CXXFLAGS = -std=c++11 -O2 -Wall -g
 
@@ -32,6 +33,10 @@ OBJS := \
 	main.o
 deps := $(OBJS:%.o=.%.o.d)
 
+raycaster_fixed.o: raycaster_fixed.cpp raycaster_tables.h
+	$(VECHO) "  CXX\t$@\n"
+	$(Q)$(CXX) -o $@ $(CXXFLAGS) -c -MMD -MF .$@.d raycaster_fixed.cpp
+
 %.o: %.cpp
 	$(VECHO) "  CXX\t$@\n"
 	$(Q)$(CXX) -o $@ $(CXXFLAGS) -c -MMD -MF .$@.d $<
@@ -39,7 +44,16 @@ deps := $(OBJS:%.o=.%.o.d)
 $(BIN): $(OBJS)
 	$(Q)$(CXX)  -o $@ $^ $(LDFLAGS)
 
+$(CALC): defs.h tools/precalculator.cpp tools/precalculator.h
+	$(VECHO) "  CXX\t$@\n"
+	$(Q)$(CXX) -o $@ $(CXXFLAGS) tools/precalculator.cpp
+
+
+raycaster_tables.h: $(CALC)
+	echo "#pragma once" > $@
+	$^ >> $@
+
 clean:
-	$(RM) $(BIN) $(OBJS) $(deps)
+	$(RM) $(BIN) $(OBJS) $(deps) $(CALC) raycaster_tables.h
 
 -include $(deps)
