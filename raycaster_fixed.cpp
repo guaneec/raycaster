@@ -1,6 +1,7 @@
 // fixed-point implementation
 
 #include "raycaster_fixed.h"
+#include <cassert>
 #include "raycaster_data.h"
 #include "raycaster_tables.h"
 
@@ -171,6 +172,8 @@ void RayCasterFixed::CalculateDistance(uint16_t rayX,
             interceptX -= MulTan(offsetY, false, quarter, angle, g_tan);
             stepY = -AbsTan(quarter, angle, g_cotan);
             break;
+        default:
+            assert(false);
         }
 
         for (;;) {
