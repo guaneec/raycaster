@@ -118,6 +118,8 @@ int main(int argc, char *args[])
                 const auto nextCounter = SDL_GetPerformanceCounter();
                 const auto seconds = (nextCounter - tickCounter) /
                                      static_cast<float>(tickFrequency);
+                if (seconds < 1.0 / 60)
+                    SDL_Delay(17 - uint32_t(seconds * 1000));
                 tickCounter = nextCounter;
                 game.Move(moveDirection, rotateDirection, seconds);
             }
