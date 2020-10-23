@@ -3,7 +3,7 @@
 #include "raycaster_fixed.h"
 #include <cassert>
 #include "raycaster_data.h"
-#include "raycaster_tables.h"
+#include "raycaster_tables_constexpr.h"
 
 // (v * f) >> 8
 uint16_t RayCasterFixed::MulU(uint8_t v, uint16_t f)
