@@ -42,8 +42,8 @@ constexpr const uint8_t *g_sin = g_sin_stda.data();
 
 static constexpr const std::array<uint8_t, 256> g_cos_stda = ([]() constexpr {
     std::array<uint8_t, 256> out{};
-    for (int i = 1; i < 256; ++i) {  // cos(0) = 0 ???
-        out[i] = static_cast<uint8_t>(256.0f * cos((i) / 1024.0f * 2 * M_PI));
+    for (int i = 0; i < 256; ++i) {  // g_cos[0] actually stores g_cos[256]
+        out[i] = int(256.0f * cos((i) / 1024.0f * 2 * M_PI));
     }
     return out;
 })();
