@@ -96,8 +96,8 @@ void RayCasterFixed::CalculateDistance(uint16_t rayX,
 {
     int8_t tileStepX;
     int8_t tileStepY;
-    int16_t interceptX = rayX;
-    int16_t interceptY = rayY;
+    int32_t interceptX = rayX;
+    int32_t interceptY = rayY;
 
     const uint8_t quarter = rayA >> 8;
     const uint8_t angle = rayA % 256;
@@ -211,8 +211,8 @@ VerticalHit:
     goto WallHit;
 
 WallHit:
-    *deltaX = hitX - rayX;
-    *deltaY = hitY - rayY;
+    *deltaX = hitX - int(rayX);
+    *deltaY = hitY - int(rayY);
 }
 
 // (playerX, playerY) is 8 box coordinate bits, 8 inside coordinate bits
@@ -228,16 +228,19 @@ void RayCasterFixed::Trace(uint16_t screenX,
         static_cast<uint16_t>(_playerA + LOOKUP16(g_deltaAngle, screenX));
 
     // neutralize artefacts around edges
-    switch (rayAngle % 256) {
-    case 1:
-    case 254:
-        rayAngle--;
-        break;
-    case 2:
-    case 255:
-        rayAngle++;
-        break;
+    if (this->removeArtefacts) {
+        switch (rayAngle % 256) {
+        case 1:
+        case 254:
+            rayAngle--;
+            break;
+        case 2:
+        case 255:
+            rayAngle++;
+            break;
+        }
     }
+
     rayAngle %= 1024;
 
     int16_t deltaX;
@@ -305,6 +308,9 @@ void RayCasterFixed::Start(uint16_t playerX, uint16_t playerY, int16_t playerA)
     _playerA = playerA;
 }
 
-RayCasterFixed::RayCasterFixed() : RayCaster() {}
+RayCasterFixed::RayCasterFixed(bool removeArtefacts = true)
+    : removeArtefacts(removeArtefacts)
+{
+}
 
 RayCasterFixed::~RayCasterFixed() {}

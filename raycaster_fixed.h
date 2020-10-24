@@ -12,7 +12,7 @@ public:
                uint16_t *textureY,
                uint16_t *textureStep);
 
-    RayCasterFixed();
+    RayCasterFixed(bool removeArtefacts);
     ~RayCasterFixed();
 
 private:
@@ -21,6 +21,7 @@ private:
     int16_t _playerA;
     uint8_t _viewQuarter;
     uint8_t _viewAngle;
+    bool removeArtefacts;
 
     static void CalculateDistance(uint16_t rayX,
                                   uint16_t rayY,

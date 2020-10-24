@@ -11,6 +11,8 @@ static constexpr const std::array<uint16_t, 256> g_tan_stda = ([]() constexpr {
     std::array<uint16_t, 256> out{};
     for (int i = 0; i < 256; ++i) {
         out[i] = static_cast<uint16_t>((256.0f * tan(i * M_PI_2 / 256.0f)));
+        if (out[i] > 32767)
+            out[i] = 32767;
     }
     return out;
 })();
@@ -21,9 +23,11 @@ static constexpr const std::array<uint16_t, 256> g_cotan_stda =
     ([]() constexpr {
         std::array<uint16_t, 256> out{};
         for (int i = 0; i < 256; ++i) {
-            i == 0 ? std::numeric_limits<uint16_t>().max()
-                   : out[i] = static_cast<uint16_t>(
-                         (256.0f / tan(i * M_PI_2 / 256.0f)));
+            out[i] = i == 0 ? std::numeric_limits<uint16_t>().max()
+                            : static_cast<uint16_t>(
+                                  (256.0f / tan(i * M_PI_2 / 256.0f)));
+            if (out[i] > 32767)
+                out[i] = 32767;
         }
         return out;
     })();
