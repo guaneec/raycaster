@@ -34,12 +34,12 @@ private:
                              uint8_t *height,
                              uint16_t *step);
     static bool IsWall(uint8_t tileX, uint8_t tileY);
-    static int16_t MulTan(uint8_t value,
+    static int32_t MulTan(uint8_t value,
                           bool inverse,
                           uint8_t quarter,
                           uint8_t angle,
                           const uint16_t *lookupTable);
-    static int16_t AbsTan(uint8_t quarter,
+    static int32_t AbsTan(uint8_t quarter,
                           uint8_t angle,
                           const uint16_t *lookupTable);
     static uint16_t MulU(uint8_t v, uint16_t f);

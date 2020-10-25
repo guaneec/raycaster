@@ -24,7 +24,7 @@ int16_t RayCasterFixed::MulS(uint8_t v, int16_t f)
     return uf;
 }
 
-int16_t RayCasterFixed::MulTan(uint8_t value,
+int32_t RayCasterFixed::MulTan(uint8_t value,
                                bool inverse,
                                uint8_t quarter,
                                uint8_t angle,
@@ -44,12 +44,13 @@ int16_t RayCasterFixed::MulTan(uint8_t value,
         return 0;
     }
     if (quarter % 2 == 1) {
-        return -MulU(signedValue, LOOKUP16(lookupTable, INVERT(angle)));
+        return -int32_t(
+            MulU(signedValue, LOOKUP16(lookupTable, INVERT(angle))));
     }
     return MulU(signedValue, LOOKUP16(lookupTable, angle));
 }
 
-inline int16_t RayCasterFixed::AbsTan(uint8_t quarter,
+inline int32_t RayCasterFixed::AbsTan(uint8_t quarter,
                                       uint8_t angle,
                                       const uint16_t *lookupTable)
 {
@@ -139,8 +140,8 @@ void RayCasterFixed::CalculateDistance(uint16_t rayX,
             break;
         }
     } else {
-        int16_t stepX;
-        int16_t stepY;
+        int32_t stepX;
+        int32_t stepY;
 
         switch (quarter) {
         case 0:
@@ -177,6 +178,13 @@ void RayCasterFixed::CalculateDistance(uint16_t rayX,
         }
 
         for (;;) {
+            // not accurate but looks better
+            // reassign intercept if overrun
+            auto ty = (tileY - tileStepY) * 256;
+            if ((tileStepY == -1 && ty < interceptY) ||
+                (tileStepY == 1 && ty > interceptY))
+                interceptY = ty;
+
             while ((tileStepY == 1 && (interceptY >> 8 < tileY)) ||
                    (tileStepY == -1 && (interceptY >> 8 >= tileY))) {
                 tileX += tileStepX;
@@ -185,6 +193,11 @@ void RayCasterFixed::CalculateDistance(uint16_t rayX,
                 }
                 interceptY += stepY;
             }
+            auto tx = (tileX - tileStepX) * 256;
+            if ((tileStepX == -1 && tx < interceptX) ||
+                (tileStepX == 1 && tx > interceptX))
+                interceptX = tx;
+
             while ((tileStepX == 1 && (interceptX >> 8 < tileX)) ||
                    (tileStepX == -1 && (interceptX >> 8 >= tileX))) {
                 tileY += tileStepY;
