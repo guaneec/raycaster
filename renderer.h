@@ -14,6 +14,9 @@ class Renderer
 
 public:
     void TraceFrame(Game *g, uint32_t *frameBuffer);
-    Renderer(RayCaster *rc) { _rc = rc; };
+    Renderer(RayCaster *rc, bool color = false) : color(color) { _rc = rc; };
     ~Renderer(){};
+
+private:
+    bool color;
 };

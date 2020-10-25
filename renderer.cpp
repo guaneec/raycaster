@@ -35,18 +35,26 @@ void Renderer::TraceFrame(Game *g, uint32_t *fb)
         for (int y = 0; y < sso * 2; y++) {
             // paint texture pixel
             auto ty = static_cast<int>(to >> 10);
-            auto tv = g_texture32[(ty << 6) + tx];
-
             to += ts;
 
-            if (tn == 1 && tv > 0) {
-                // dark wall
-                // tv >>= 1;
-                tv = (tv & 0xff000000) | ((tv & 0x00ff0000) >> 17 << 16) |
-                     ((tv & 0x0000ff00) >> 9 << 8) | ((tv & 0x000000ff) >> 1);
+            if (color) {
+                auto tv = g_texture32[(ty << 6) + tx];
+                if (tn == 1 && tv > 0) {
+                    // dark wall
+                    tv = (tv & 0xff000000) | ((tv & 0x00ff0000) >> 17 << 16) |
+                         ((tv & 0x0000ff00) >> 9 << 8) |
+                         ((tv & 0x000000ff) >> 1);
+                }
+                *lb = tv;
+            } else {
+                auto tv = g_texture8[(ty << 6) + tx];
+                if (tn == 1 && tv > 0) {
+                    // dark wall
+                    tv >>= 1;
+                }
+                *lb = GetARGB(tv);
             }
-            // *lb = GetARGB(tv);
-            *lb = tv;
+
             lb += SCREEN_WIDTH;
         }
 
