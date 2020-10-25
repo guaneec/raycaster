@@ -39,4 +39,11 @@ Game::Game()
     playerA = 5.25f;
 }
 
-Game::~Game() {}
+Game::~Game()
+{
+    printf(
+        "playerX = %ff;\n"
+        "playerY = %ff;\n"
+        "playerA = %ff;\n",
+        playerX, playerY, playerA);
+}
