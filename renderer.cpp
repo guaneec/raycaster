@@ -32,6 +32,7 @@ void Renderer::TraceFrame(Game *g, uint32_t *fb)
             lb += SCREEN_WIDTH;
         }
 
+        to = 256 * HORIZON_HEIGHT - ts * sso;
         for (int y = 0; y < sso * 2; y++) {
             // paint texture pixel
             auto ty = static_cast<int>(to >> 10);
